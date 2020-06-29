@@ -37,6 +37,7 @@ class usuario{
 		$this->dtcadastro = $value;
 	}
 
+//seleciona unico usuario
 
 public function loadById($id){
 
@@ -57,6 +58,51 @@ public function loadById($id){
 
 	}
 }
+//retorna  uma lista de usuario
+public static function getList(){
+
+$sql = new Sql();
+
+return $sql->select("SELECT*FROM tb_usuarios ORDER BY deslogin"); 
+
+}
+
+
+//carrega uma lista de usuario buscando pelo login
+public static function search($login){
+
+$sql = new Sql();
+
+return $sql->select("SELECT*FROM tb_usuarios WHERE deslogin LIKE :SEARCH ORDER BY deslogin", array(
+	':SEARCH'=>"%".$login."%"
+));
+
+}
+
+//obter dados autenticados, passando login e senha
+public function login($login, $password){
+
+	$sql = new Sql();
+
+	$results = $sql->select("SELECT * FROM tb_usuarios WHERE deslogin = :LOGIN AND dessenha = :PASSWORD", array(
+		":LOGIN"=>$login,
+		":PASSWORD"=>$password
+		 ));
+
+	if(count($results) > 0){
+
+		$row = $results[0];
+
+		$this->setIdusuario($row['idusuario']);
+		$this->setDeslogin($row['deslogin']);
+		$this->setDessenha($row['dessenha']);
+		$this->setDtcadastro(new DateTime($row['dtcadastro']));
+	}else{
+		throw new Exception("Dados nao encontrado");
+		
+	}
+
+}
 
 public function __toString(){
 	return json_encode(array(
@@ -65,7 +111,9 @@ public function __toString(){
 		'dessenha' =>$this->getDessenha(),
 		'dtcadastro' =>$this->getDtcadastro()->format("d/m/Y H:i:s")
 		 ));
-}
+    }
+
+
 }
 
 
