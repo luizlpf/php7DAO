@@ -30,5 +30,18 @@ echo json_encode($busca);
 $usuario->login("sam","00000");
 echo $usuario;
 */
-	
+
+//criando um  novo usuario
+/*
+$aluno = new Usuario("nika", "102030");
+$aluno->insert();
+echo $aluno;
+*/
+
+$usuario = new Usuario();
+$usuario->loadById(47);
+$usuario->update("professor","2345");
+
+echo $usuario;
+
 ?>
